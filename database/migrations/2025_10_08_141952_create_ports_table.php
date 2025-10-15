@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('ports', function (Blueprint $table) {
     $table->id();
-    $table->string('name');
-    $table->string('country');
-    $table->string('coordinates');
-    $table->integer('docking_capacity')->nullable();
+    $table->string('name', 100);
+    $table->string('country', 50);
+    $table->string('coordinates', 50); // e.g. "1.2921° S, 36.8219° E"
+    $table->integer('docking_capacity')->unsigned()->nullable();
     $table->boolean('customs_authorized')->default(false);
     $table->boolean('is_active')->default(true);
     $table->timestamps();

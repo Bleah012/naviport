@@ -19,8 +19,9 @@ return new class extends Migration
     $table->foreignId('destination_port_id')->constrained('ports')->onDelete('cascade');
     $table->date('departure_date');
     $table->date('arrival_date')->nullable();
-    $table->string('status')->default('scheduled');
+    $table->string('status', 20)->default('scheduled');
     $table->text('delay_reason')->nullable();
+
     $table->timestamps();
 });
 

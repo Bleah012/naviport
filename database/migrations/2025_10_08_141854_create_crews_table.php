@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('crew', function (Blueprint $table) {
     $table->id();
-    $table->string('first_name');
-    $table->string('last_name');
-    $table->string('role');
-    $table->string('phone_number')->unique();
-    $table->string('nationality')->nullable();
+    $table->string('first_name', 50);
+    $table->string('last_name', 50);
+    $table->string('role', 30);
+    $table->string('phone_number', 20)->unique();
+    $table->string('nationality', 40)->nullable();
     $table->boolean('is_active')->default(true);
     $table->timestamps();
 });

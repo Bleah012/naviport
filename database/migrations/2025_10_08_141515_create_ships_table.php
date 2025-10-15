@@ -13,11 +13,11 @@ return new class extends Migration
 {
     Schema::create('ships', function (Blueprint $table) {
         $table->id();
-        $table->string('name');
-        $table->string('registration_number')->unique();
-        $table->integer('capacity');
-        $table->string('type')->nullable();
-        $table->string('status')->default('active');
+        $table->string('name', 100);
+        $table->string('registration_number', 30)->unique();
+        $table->integer('capacity')->unsigned(); // assuming positive values
+        $table->string('type', 50)->nullable();
+        $table->string('status', 20)->default('active');
         $table->boolean('is_active')->default(true);
         $table->timestamps();
     });
