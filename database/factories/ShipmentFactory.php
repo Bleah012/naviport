@@ -14,10 +14,18 @@ class ShipmentFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+    public function definition()
+{
+    return [
+        'cargo_id' => \App\Models\Cargo::factory(),
+        'ship_id' => \App\Models\Ship::factory(),
+        'origin_port_id' => \App\Models\Port::factory(),
+        'destination_port_id' => \App\Models\Port::factory(),
+        'departure_date' => $this->faker->dateTimeBetween('-1 week', '+1 week'),
+        'arrival_date' => $this->faker->dateTimeBetween('+2 days', '+2 weeks'),
+        'status' => $this->faker->randomElement(['scheduled', 'in transit', 'delayed']),
+        'delay_reason' => $this->faker->optional()->sentence,
+    ];
+}
+
 }

@@ -14,10 +14,16 @@ class ShipFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+    public function definition()
+{
+    return [
+        'name' => $this->faker->company,
+        'registration_number' => strtoupper($this->faker->bothify('SHIP-####')),
+        'capacity' => $this->faker->numberBetween(100, 10000),
+        'type' => $this->faker->randomElement(['Cargo', 'Tanker', 'Container']),
+        'status' => 'active',
+        'is_active' => true,
+    ];
+}
+
 }

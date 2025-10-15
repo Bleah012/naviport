@@ -14,10 +14,16 @@ class PortFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+   public function definition()
+{
+    return [
+        'name' => $this->faker->city . ' Port',
+        'country' => $this->faker->country,
+        'coordinates' => $this->faker->latitude . ', ' . $this->faker->longitude,
+        'docking_capacity' => $this->faker->numberBetween(5, 50),
+        'customs_authorized' => $this->faker->boolean,
+        'is_active' => true,
+    ];
+}
+
 }

@@ -14,10 +14,16 @@ class CargoFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+    public function definition()
+{
+    return [
+        'description' => $this->faker->sentence,
+        'weight' => $this->faker->randomFloat(2, 100, 10000),
+        'volume' => $this->faker->randomFloat(2, 10, 500),
+        'cargo_type' => $this->faker->randomElement(['Liquid', 'Container', 'Bulk']),
+        'client_id' => \App\Models\Client::factory(),
+        'is_active' => true,
+    ];
+}
+
 }

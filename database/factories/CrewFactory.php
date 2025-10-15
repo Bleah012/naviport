@@ -14,10 +14,16 @@ class CrewFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+    public function definition()
+{
+    return [
+        'first_name' => $this->faker->firstName,
+        'last_name' => $this->faker->lastName,
+        'role' => $this->faker->randomElement(['Captain', 'Engineer', 'Cook']),
+        'phone_number' => $this->faker->unique()->phoneNumber,
+        'nationality' => $this->faker->country,
+        'is_active' => true,
+    ];
+}
+
 }
