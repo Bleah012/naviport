@@ -19,4 +19,24 @@ class Shipment extends Model
         'status',
         'delay_reason',
     ];
+
+    public function cargo()
+    {
+        return $this->belongsTo(Cargo::class);
+    }
+
+    public function ship()
+    {
+        return $this->belongsTo(Ship::class);
+    }
+
+    public function originPort()
+    {
+        return $this->belongsTo(Port::class, 'origin_port_id');
+    }
+
+    public function destinationPort()
+    {
+        return $this->belongsTo(Port::class, 'destination_port_id');
+    }
 }

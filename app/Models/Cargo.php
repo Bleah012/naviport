@@ -17,4 +17,9 @@ class Cargo extends Model
         'client_id',
         'is_active',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }
