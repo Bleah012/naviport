@@ -21,7 +21,7 @@ class CrewFactory extends Factory
         'last_name' => $this->faker->lastName,
         'role' => $this->faker->randomElement(['Captain', 'Engineer', 'Cook']),
         'phone_number' => $this->faker->unique()->phoneNumber,
-        'nationality' => $this->faker->country,
+        'nationality' => substr($this->faker->country, 0, 40),
         'is_active' => true,
     ];
 }

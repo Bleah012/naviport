@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cargo', function (Blueprint $table) {
+        Schema::create('cargos', function (Blueprint $table) {
+
     $table->id();
     $table->text('description');
     $table->decimal('weight', 8, 2); // up to 999,999.99 kg

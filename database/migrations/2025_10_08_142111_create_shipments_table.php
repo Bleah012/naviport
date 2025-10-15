@@ -11,12 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shipments', function (Blueprint $table) {
+       Schema::create('shipments', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('cargo_id')->constrained('cargo')->onDelete('cascade');
+
+    // Define the column first
+    $table->unsignedBigInteger('cargo_id');
+    $table->foreign('cargo_id')->references('id')->on('cargos')->onDelete('cascade');
+
+    // These are fine as-is
     $table->foreignId('ship_id')->constrained()->onDelete('cascade');
     $table->foreignId('origin_port_id')->constrained('ports')->onDelete('cascade');
     $table->foreignId('destination_port_id')->constrained('ports')->onDelete('cascade');
+
     $table->date('departure_date');
     $table->date('arrival_date')->nullable();
     $table->string('status', 20)->default('scheduled');
@@ -24,6 +30,7 @@ return new class extends Migration
 
     $table->timestamps();
 });
+
 
     }
 
