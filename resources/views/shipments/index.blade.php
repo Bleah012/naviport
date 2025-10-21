@@ -1,52 +1,66 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h2 class="mb-4">Shipment Dashboard</h2>
-
-    <!--  Search Form -->
-    <form method="GET" action="{{ route('shipments.index') }}" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by status or date">
-            <button class="btn btn-primary">Filter</button>
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex items-center space-x-3">
+            <x-application-logo class="h-8 w-auto fill-current text-yellow-400" />
+            <h2 class="text-4xl font-black text-white uppercase tracking-wide">
+                Manage Shipments
+            </h2>
         </div>
-    </form>
+    </x-slot>
 
-    <!-- Shipment Table -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Cargo</th>
-                <th>Ship</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Departure</th>
-                <th>Arrival</th>
-                <th>Status</th>
-                <th>Delay Reason</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($shipments as $shipment)
-                <tr>
-                    <td>{{ $shipment->id }}</td>
-                    <td>{{ $shipment->cargo->description ?? '—' }}</td>
-                    <td>{{ $shipment->ship->name ?? '—' }}</td>
-                    <td>{{ $shipment->originPort->name ?? '—' }}</td>
-                    <td>{{ $shipment->destinationPort->name ?? '—' }}</td>
-                    <td>{{ $shipment->departure_date }}</td>
-                    <td>{{ $shipment->arrival_date ?? '—' }}</td>
-                    <td>{{ ucfirst($shipment->status) }}</td>
-                    <td>{{ $shipment->delay_reason ?? '—' }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="max-w-7xl mx-auto py-12 px-6">
+        <h3 class="text-xl font-bold text-indigo-900 mb-4">Shipment Dashboard</h3>
 
-    <!--  Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        {{ $shipments->links() }}
+        <a href="{{ route('shipments.create') }}" class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-6">
+            + Add New Shipment
+        </a>
+
+        <form method="GET" action="{{ route('shipments.index') }}" class="mb-6">
+            <div class="flex gap-2">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       class="flex-1 border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400"
+                       placeholder="Search by reference or status">
+                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Filter</button>
+            </div>
+        </form>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-indigo-300 rounded shadow">
+                <thead class="bg-[#002147] text-white uppercase text-sm">
+                    <tr>
+                        <th class="px-4 py-2">ID</th>
+                        <th class="px-4 py-2">Reference</th>
+                        <th class="px-4 py-2">Origin</th>
+                        <th class="px-4 py-2">Destination</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($shipments as $shipment)
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ $shipment->id }}</td>
+                            <td class="px-4 py-2">{{ $shipment->reference }}</td>
+                            <td class="px-4 py-2">{{ $shipment->origin }}</td>
+                            <td class="px-4 py-2">{{ $shipment->destination }}</td>
+                            <td class="px-4 py-2">{{ $shipment->status }}</td>
+                            <td class="px-4 py-2 flex gap-2">
+                                <a href="{{ route('shipments.edit', $shipment->id) }}" class="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 text-sm">Edit</a>
+                                <form method="POST" action="{{ route('shipments.destroy', $shipment->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+                                            onclick="return confirm('Remove this shipment?')">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6">
+            {{ $shipments->links() }}
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

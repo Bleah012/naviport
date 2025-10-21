@@ -15,8 +15,8 @@ return new class extends Migration
     $table->id();
 
     // Define the column first
-    $table->unsignedBigInteger('cargo_id');
-    $table->foreign('cargo_id')->references('id')->on('cargos')->onDelete('cascade');
+    $table->unsignedBigInteger('cargo_id')->nullable();
+    $table->foreign('cargo_id')->references('id')->on('cargos')->onDelete('set null');
 
     // These are fine as-is
     $table->foreignId('ship_id')->constrained()->onDelete('cascade');
