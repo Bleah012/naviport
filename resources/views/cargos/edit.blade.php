@@ -1,61 +1,158 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center space-x-3">
-            <x-application-logo class="h-8 w-auto fill-current text-yellow-400" />
-            <h2 class="text-4xl font-black text-white uppercase tracking-wide">
-                Edit Cargo
-            </h2>
+        <div class="header-container">
+            <x-application-logo class="logo" />
+            <h2 class="header-title">Edit Cargo</h2>
         </div>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="content-container">
+        <h3 class="section-title">Cargo Details</h3>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('cargos.update', $cargo->id) }}">
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-indigo-900">Cargo Name</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $cargo->name) }}"
-                           class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description *</label>
+                <input type="text" name="description" id="description" value="{{ old('description', $cargo->description) }}" class="form-control" required>
+            </div>
 
-                <div>
-                    <label for="category" class="block text-sm font-medium text-indigo-900">Category</label>
-                    <input type="text" name="category" id="category" value="{{ old('category', $cargo->category) }}"
-                           class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                </div>
+            <div class="mb-3">
+                <label for="type" class="form-label">Type *</label>
+                <input type="text" name="type" id="type" value="{{ old('type', $cargo->type) }}" class="form-control" required>
+            </div>
 
-                <div>
-                    <label for="weight" class="block text-sm font-medium text-indigo-900">Weight (kg)</label>
-                    <input type="number" name="weight" id="weight" value="{{ old('weight', $cargo->weight) }}"
-                           class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                </div>
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight (kg) *</label>
+                <input type="number" name="weight" id="weight" value="{{ old('weight', $cargo->weight) }}" class="form-control" required>
+            </div>
 
-                <div>
-                    <label for="client_id" class="block text-sm font-medium text-indigo-900">Client</label>
-                    <select name="client_id" id="client_id"
-                            class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                        @foreach ($clients as $client)
-                            <option value="{{ $client->id }}" {{ $cargo->client_id == $client->id ? 'selected' : '' }}>
-                                {{ $client->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="mb-3 checkbox-group">
+                <input type="checkbox" name="is_active" id="is_active" {{ $cargo->is_active ? 'checked' : '' }}>
+                <label for="is_active">Ready</label>
+            </div>
 
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" name="is_active" id="is_active" {{ $cargo->is_active ? 'checked' : '' }}>
-                    <label for="is_active" class="text-sm text-indigo-900">In Transit</label>
-                </div>
-
-                <div>
-                    <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-                        Update Cargo
-                    </button>
-                </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Update Cargo</button>
+                <a href="{{ route('cargos.index') }}" class="btn-cancel">Cancel</a>
             </div>
         </form>
     </div>
 </x-app-layout>
+
+<style>
+/* Layout */
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    height: 32px;
+    width: auto;
+    fill: #FFD700;
+}
+
+.header-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.content-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 24px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #002147;
+    margin-bottom: 24px;
+}
+
+/* Form */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.checkbox-group label {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Buttons */
+.form-actions {
+    margin-top: 32px;
+}
+
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-decoration: none;
+    margin-left: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+</style>

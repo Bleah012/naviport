@@ -1,69 +1,57 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center space-x-3">
-            <x-application-logo class="h-8 w-auto fill-current text-yellow-400" />
-            <h2 class="text-4xl font-black text-white uppercase tracking-wide">
-                Manage Cargo
-            </h2>
+        <div class="header-container">
+            <x-application-logo class="logo" />
+            <h2 class="header-title">Manage Cargos</h2>
         </div>
     </x-slot>
 
-    @role('admin')
-    <p class="text-green-600 font-bold">✅ You are logged in as an admin.</p>
-@else
-    <p class="text-red-600 font-bold">🚫 You are NOT an admin.</p>
-@endrole
+    <div class="content-container">
+        <h3 class="section-title">Cargo Dashboard</h3>
 
-    <div class="max-w-7xl mx-auto py-12 px-6">
-        <h3 class="text-xl font-bold text-indigo-900 mb-4">Cargo Dashboard</h3>
+        @if(auth()->user() && auth()->user()->hasRole('admin'))
+            <div class="button-wrapper">
+                <a href="{{ route('cargos.create') }}" class="add-button">
+                    + Add New Cargo
+                </a>
+            </div>
+        @endif
 
-        {{-- Temporarily removed @role check --}}
-        <div class="flex justify-end mb-6">
-            <a href="{{ route('cargos.create') }}"
-               class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition">
-                + Add New Cargo
-            </a>
-        </div>
-
-        <form method="GET" action="{{ route('cargos.index') }}" class="mb-6">
-            <div class="flex gap-2">
+        <form method="GET" action="{{ route('cargos.index') }}" class="filter-form">
+            <div class="filter-group">
                 <input type="text" name="search" value="{{ request('search') }}"
-                       class="flex-1 border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400"
-                       placeholder="Search by name or category">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Filter</button>
+                       class="filter-input"
+                       placeholder="Search by description or type">
+                <button class="filter-button">Filter</button>
             </div>
         </form>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-indigo-300 rounded shadow">
-                <thead class="bg-[#002147] text-white uppercase text-sm">
+        <div class="table-wrapper">
+            <table class="styled-table">
+                <thead>
                     <tr>
-                        <th class="px-4 py-2">ID</th>
-                        <th class="px-4 py-2">Name</th>
-                        <th class="px-4 py-2">Category</th>
-                        <th class="px-4 py-2">Weight</th>
-                        <th class="px-4 py-2">Client</th>
-                        <th class="px-4 py-2">Status</th>
-                        <th class="px-4 py-2">Actions</th>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Weight</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($cargos as $cargo)
-                        <tr class="border-t">
-                            <td class="px-4 py-2">{{ $cargo->id }}</td>
-                            <td class="px-4 py-2">{{ $cargo->name }}</td>
-                            <td class="px-4 py-2">{{ $cargo->category }}</td>
-                            <td class="px-4 py-2">{{ $cargo->weight }} kg</td>
-                            <td class="px-4 py-2">{{ $cargo->client->name ?? '—' }}</td>
-                            <td class="px-4 py-2">{{ $cargo->is_active ? 'In Transit' : 'Delivered' }}</td>
-                            <td class="px-4 py-2 flex gap-2">
-                                <a href="{{ route('cargos.edit', $cargo->id) }}"
-                                   class="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 text-sm">Edit</a>
+                        <tr>
+                            <td>{{ $cargo->id }}</td>
+                            <td>{{ $cargo->description }}</td>
+                            <td>{{ $cargo->type }}</td>
+                            <td>{{ $cargo->weight }} kg</td>
+                            <td>{{ $cargo->is_active ? 'Ready' : 'Held' }}</td>
+                            <td class="action-cell">
+                                <a href="{{ route('cargos.edit', $cargo->id) }}" class="edit-button">Edit</a>
                                 <form method="POST" action="{{ route('cargos.destroy', $cargo->id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
-                                            onclick="return confirm('Remove this cargo item?')">Remove</button>
+                                    <button class="delete-button" onclick="return confirm('Remove this cargo?')">Remove</button>
                                 </form>
                             </td>
                         </tr>
@@ -72,8 +60,159 @@
             </table>
         </div>
 
-        <div class="mt-6">
+        <div class="pagination-wrapper">
             {{ $cargos->links() }}
         </div>
     </div>
 </x-app-layout>
+
+<style>
+/* Layout */
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    height: 32px;
+    width: auto;
+    fill: #FFD700;
+}
+
+.header-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.content-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #002147;
+    margin-bottom: 16px;
+}
+
+/* Add Button */
+.button-wrapper {
+    text-align: right;
+    margin-bottom: 24px;
+}
+
+.add-button {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #218838;
+}
+
+/* Filter Form */
+.filter-form {
+    margin-bottom: 24px;
+}
+
+.filter-group {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.filter-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    background-color: #0056b3;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px;
+    border-top: 1px solid #ccc;
+    text-align: left;
+}
+
+.styled-table thead {
+    background-color: #002147;
+    color: white;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+/* Action Buttons */
+.action-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-button {
+    background-color: #ffc107;
+    color: black;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+/* Pagination */
+.pagination-wrapper {
+    margin-top: 24px;
+}
+</style>

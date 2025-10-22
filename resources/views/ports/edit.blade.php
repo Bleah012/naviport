@@ -1,49 +1,158 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center space-x-3">
-            <x-application-logo class="h-8 w-auto fill-current text-yellow-400" />
-            <h2 class="text-4xl font-black text-white uppercase tracking-wide">
-                Edit Port
-            </h2>
+        <div class="header-container">
+            <x-application-logo class="logo" />
+            <h2 class="header-title">Edit Port</h2>
         </div>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="content-container">
+        <h3 class="section-title">Port Details</h3>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('ports.update', $port->id) }}">
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-indigo-900">Port Name</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $port->name) }}"
-                           class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Port Name *</label>
+                <input type="text" name="name" id="name" value="{{ old('name', $port->name) }}" class="form-control" required>
+            </div>
 
-                <div>
-                    <label for="location" class="block text-sm font-medium text-indigo-900">Location</label>
-                    <input type="text" name="location" id="location" value="{{ old('location', $port->location) }}"
-                           class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location *</label>
+                <input type="text" name="location" id="location" value="{{ old('location', $port->location) }}" class="form-control" required>
+            </div>
 
-                <div>
-                    <label for="capacity" class="block text-sm font-medium text-indigo-900">Capacity</label>
-                    <input type="number" name="capacity" id="capacity" value="{{ old('capacity', $port->capacity) }}"
-                           class="mt-1 block w-full border border-indigo-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-yellow-400">
-                </div>
+            <div class="mb-3">
+                <label for="capacity" class="form-label">Capacity *</label>
+                <input type="number" name="capacity" id="capacity" value="{{ old('capacity', $port->capacity) }}" class="form-control" required>
+            </div>
 
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" name="is_active" id="is_active" {{ $port->is_active ? 'checked' : '' }}>
-                    <label for="is_active" class="text-sm text-indigo-900">Operational</label>
-                </div>
+            <div class="mb-3 checkbox-group">
+                <input type="checkbox" name="is_active" id="is_active" {{ $port->is_active ? 'checked' : '' }}>
+                <label for="is_active">Operational</label>
+            </div>
 
-                <div>
-                    <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-                        Update Port
-                    </button>
-                </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Update Port</button>
+                <a href="{{ route('ports.index') }}" class="btn-cancel">Cancel</a>
             </div>
         </form>
     </div>
 </x-app-layout>
+
+<style>
+/* Layout */
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    height: 32px;
+    width: auto;
+    fill: #FFD700;
+}
+
+.header-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.content-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 24px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #002147;
+    margin-bottom: 24px;
+}
+
+/* Form */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.checkbox-group label {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Buttons */
+.form-actions {
+    margin-top: 32px;
+}
+
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-decoration: none;
+    margin-left: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+</style>
